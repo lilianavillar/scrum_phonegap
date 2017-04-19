@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <link rel="stylesheet" href="css/framework7.material.min.css">
+    <link rel="stylesheet" href="css/framework7.material.colors.min.css">
+    <link rel="stylesheet" href="css/framework7-icons.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>ScrumApp</title>
+</head>
+<body class="theme-pink">
+    <!--panel-overlay forma parte del menú, es la parte oscura que queda debajo-->
+    <div class="panel-overlay"></div>
+    <!--Este es el menú-->
+    <div class="panel panel-left panel-cover">
+        <p>Opciones SCRUM Master</p>
+         <p><a href="contactos.html" class="close-panel">Gestionar miembros equipo</a></p>
+    </div>
+    <!--Creamos el contenedor de vistas-->
+    <div class="views">
+        <!--Creamos el View principal-->
+        <div class="view view-main">
+            <div class="pages navbar-fixed">
+                <!--Añadimos la primera página-->
+                <div data-page="index" class="page">
+                    <!--Esto es barra superior, menu, logo, etc-->
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center">ScrumApp</div>
+                            <div class="right">
+                                <a href="#" class="open-panel link icon-only right">
+                                    <i class="icon icon-bars"></i>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--El contenido de la página-->
+                    <div class="page-content">
+                        Aquí iría la lista de miembros del equipo con un resumen de cada uno
+
+                        //Botón para añadir un nuevo contacto
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/framework7.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script>
+    app.initialize();
+    </script>
+</body>
+</html>

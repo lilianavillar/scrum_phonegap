@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <link rel="stylesheet" href="css/framework7.material.min.css">
+    <link rel="stylesheet" href="css/framework7.material.colors.min.css">
+    <link rel="stylesheet" href="css/framework7-icons.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>ScrumApp</title>
+</head>
+<body class="theme-pink">
+    <!--panel-overlay forma parte del menú, es la parte oscura que queda debajo-->
+    <div class="panel-overlay"></div>
+    <!--Este es el menú-->
+    <div class="panel panel-left panel-cover">
+        <p>Opciones SCRUM Master</p>
+         <p><a href="#contactos" class="close-panel">Gestionar miembros equipo</a></p>
+    </div>
+    <!--Creamos el contenedor de vistas-->
+    <div class="views">
+        <!--Creamos el View principal-->
+        <div class="view view-main">
+            <div class="pages navbar-fixed">
+                <!--Añadimos la primera página-->
+                <div data-page="index" class="page">
+                    <!--Esto es barra superior, menu, logo, etc-->
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center">ScrumApp</div>
+                            <div class="right">
+                                <a href="#" class="open-panel link icon-only right">
+                                    <i class="icon icon-bars"></i>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--El contenido de la página-->
+                    <div class="page-content">
+                        ESTA ES LA PÁGINA PRINCIPAL
+                    </div>
+                </div>
+    <!--
+     PAGINA LISTADO CONTACTOS
+     -->
+                <div class="page cached" data-page="contactos">
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center">Miembros del equipo</div>
+                            <div class="right">
+                                <a href="#" class="open-panel link icon-only right">
+                                    <i class="icon icon-bars"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <a id="irNuevoContactoButton" href="#" class="floating-button color-pink">
+                        <i class="icon icon-plus"></i>
+                    </a>
+                    <div class="page-content">
+                        <div id="contactosList" class="list-block virtual-list">
+                        </div>
+                    </div>
+                </div>
+    <!--
+    PAGINA NUEVO CONTACTO
+    !-->
+                <div class="page cached" data-page="nuevoContacto">
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center">Nuevo miembro</div>
+                            <div class="right">
+                                <a href="#" class="open-panel link icon-only right">
+                                    <i class="icon icon-bars"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <form id="nuevoContactoForm" class="list-block">
+                            <ul>
+                                <!-- Nombre -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="text" id="nombre" name="nombre" placeholder="Nombre">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Apellidos -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Email -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">email</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="email" id="email" name="email" placeholder="Email corporativo">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Horas semanales -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">time</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="number" id="horas" name="horas" placeholder="Horas semanales">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </form>
+                        <p class="buttons-row">
+                            <a id="cancelarContactoButton" href="#contactos" class="button button-raised">Cancelar</a>
+                            <a id="nuevoContactoButton" href="#" class="button button-fill button-raised button-nuevo-contacto">Aceptar</a>
+                        </p>
+                    </div>
+                </div>
+            <!--
+
+            !-->
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/framework7.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script>
+    app.initialize();
+    </script>
+</body>
+</html>
