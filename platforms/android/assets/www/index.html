@@ -71,7 +71,7 @@
                 <div class="page cached" data-page="nuevoContacto">
                     <div class="navbar">
                         <div class="navbar-inner">
-                            <div class="center">Nuevo miembro</div>
+                            <div class="center">Nuevo contacto</div>
                             <div class="right">
                                 <a href="#" class="open-panel link icon-only right">
                                     <i class="icon icon-bars"></i>
@@ -134,9 +134,76 @@
                         </p>
                     </div>
                 </div>
-            <!--
 
-            !-->
+                <!--
+                PAGINA EDITAR CONTACTO
+                !-->
+                <div class="page cached" data-page="editarContacto">
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center">Editar contacto</div>
+                            <div class="right">
+                                <a href="#" class="open-panel link icon-only right">
+                                    <i class="icon icon-bars"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <form id="editarContactoForm" class="list-block">
+                            <ul>
+                                <!-- Editar Nombre -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="text" id="editarNombre" name="nombre" placeholder="Nombre">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Editar Apellidos -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="text" id="editarApellidos" name="apellidos" placeholder="Apellidos">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Editar Email -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">email</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="email" id="editarEmail" name="email" readonly="true">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Editar Horas semanales -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">time</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="number" id="editarHoras" name="horas" placeholder="Horas semanales">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </form>
+                        <p class="buttons-row">
+                            <a id="cancelarEditarButton" href="#contactos" class="button button-raised">Cancelar</a>
+                            <a id="editarContactoButton" href="#" class="button button-fill button-raised button-nuevo-contacto">Editar</a>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

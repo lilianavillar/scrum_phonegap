@@ -22,7 +22,44 @@ var app = {
             function(error) {
             });
         });
+    },
+    eliminarContacto: function(email){
+        myDB.transaction(function(transaction) {
+        transaction.executeSql('DELETE FROM contacto WHERE email=?', [email],
+            function (tx, results) {
+                myApp.addNotification({ message: 'Contacto eliminado con éxito.', hold: 2000});
+            },
+            function(error){
+                myApp.addNotification({ message: 'Ha ocurrido un error al eliminar el contacto.', hold: 2000});
+            });
+        });
+    },
+    modificarContacto: function(email){
+        alert("VOY A MODIFICAR");
+        var nombreActual;
+        var apellidosActual;
+        var horasActual;
+        myDB.transaction(function(transaction) {
+        transaction.executeSql('SELECT * FROM contacto WHERE email=?', [email],
+            function (tx, results) {
+                //Se obtienen los valores del contacto a actualizar
+                nombreActual = results.rows.item(0).nombre;
+                apellidosActual = results.rows.item(0).apellidos;
+                horasActual = results.rows.item(0).horas;
+                //Se muestran en el formulario de editar contacto
+                document.getElementById("editarNombre").value = nombreActual;
+                document.getElementById("editarApellidos").value = apellidosActual;
+                document.getElementById("editarEmail").value = email;
+                document.getElementById("editarHoras").value = horasActual;
+
+                mainView.router.loadPage({pageName: 'editarContacto' , ignoreCache: true, force: true});
+            },
+            function(error){
+                myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
+            });
+         });
     }
+
 };
 myApp.onPageInit("contactos", function(){
     $$('#irNuevoContactoButton').on('click', function(event){
@@ -56,9 +93,9 @@ myApp.onPageBeforeAnimation("contactos", function(){
                               '</a>'+
                           '</div>'+
                           '<div class="swipeout-actions-right">'+
-                              '<a class="bg-green" href="#">Modificar</a>'+
-                              '<a href="#" class="swipeout-delete"'+
-                              '>Delete</a>'+
+                              '<a class="bg-green" onclick="app.modificarContacto(\'{{email}}\');">Editar</a>'+
+                              '<a onclick="app.eliminarContacto(\'{{email}}\');" class="swipeout-delete"'+
+                              '>Borrar</a>'+
                           '</div>'+
                       '</li>'
                 });
@@ -68,23 +105,64 @@ myApp.onPageBeforeAnimation("contactos", function(){
 myApp.onPageBeforeAnimation("nuevoContacto", function(){
      $$('#nuevoContactoForm')[0].reset();
 });
+
 myApp.onPageInit("nuevoContacto", function(){
     $$('#nuevoContactoButton').on('click', function(event){
         event.preventDefault();
+
         var nombre = $("#nombre").val();
         var apellidos = $("#apellidos").val();
         var email = $("#email").val();
         var horas = $("#horas").val();
+
+        //Para añadir un nuevo contacto en sqlite primero se verifica que el email no este repetido.
         myDB.transaction(function(transaction) {
-            var executeQuery = "INSERT INTO contacto (nombre, apellidos, email, horas) VALUES (?,?,?,?)";
-            transaction.executeSql(executeQuery, [nombre, apellidos, email, horas]
+        transaction.executeSql('SELECT * FROM contacto WHERE email=?', [email],
+            function (tx, results) {
+                var len = results.rows.length;
+                if(len == 0){
+                    myDB.transaction(function(transaction) {
+                        var executeQuery = "INSERT INTO contacto (nombre, apellidos, email, horas) VALUES (?,?,?,?)";
+                        transaction.executeSql(executeQuery, [nombre, apellidos, email, horas]
+                            , function(tx, result) {
+                                myApp.addNotification({ message: 'Nuevo miembro del equipo añadido con éxito', hold: 2000});
+                                mainView.router.loadPage({pageName: 'contactos', ignoreCache: true, force: true});
+                            },
+                            function(error){
+                                myApp.addNotification({ message: 'Ha ocurrido un error al añadir el nuevo miembro', hold: 2000});
+                                });
+                        });
+                   }
+                 else{
+                    myApp.addNotification({ message: 'Este email ya está en uso.', hold: 2000});
+                 }
+            },
+            function(error){
+                myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
+            });
+         });
+    });
+});
+
+myApp.onPageInit("editarContacto", function(){
+    $$('#editarContactoButton').on('click', function(event){
+        event.preventDefault();
+
+        var nombre = $("#editarNombre").val();
+        var apellidos = $("#editarApellidos").val();
+        var horas = $("#editarHoras").val();
+
+        myDB.transaction(function(transaction) {
+            var executeQuery = "UPDATE contacto SET nombre=?, apellidos=?, horas=?) WHERE id=?";
+            transaction.executeSql(executeQuery, [nombre, apellidos, horas, id]
                 , function(tx, result) {
-                    myApp.addNotification({ message: 'Nuevo miembro del equipo añadido con éxito', hold: 2000});
+                    myApp.addNotification({ message: 'Se ha editado el con éxito', hold: 2000});
                     mainView.router.loadPage({pageName: 'contactos', ignoreCache: true, force: true});
                 },
                 function(error){
-                    myApp.addNotification({ message: 'Ha ocurrido un error al añadir el nuevo miembro', hold: 2000});
+                    myApp.addNotification({ message: 'Ha ocurrido un error al editar el contacto', hold: 2000});
+                    });
             });
-        });
+
     });
 });
