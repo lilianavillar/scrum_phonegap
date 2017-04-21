@@ -35,7 +35,6 @@ var app = {
         });
     },
     modificarContacto: function(email){
-        alert("VOY A MODIFICAR");
         var nombreActual;
         var apellidosActual;
         var horasActual;
@@ -147,14 +146,14 @@ myApp.onPageInit("nuevoContacto", function(){
 myApp.onPageInit("editarContacto", function(){
     $$('#editarContactoButton').on('click', function(event){
         event.preventDefault();
-
         var nombre = $("#editarNombre").val();
         var apellidos = $("#editarApellidos").val();
+        var email = $("#editarEmail").val();
         var horas = $("#editarHoras").val();
 
         myDB.transaction(function(transaction) {
-            var executeQuery = "UPDATE contacto SET nombre=?, apellidos=?, horas=?) WHERE id=?";
-            transaction.executeSql(executeQuery, [nombre, apellidos, horas, id]
+            var executeQuery = "UPDATE contacto SET nombre=?, apellidos=?, horas=? WHERE email=?";
+            transaction.executeSql(executeQuery, [nombre, apellidos, horas, email]
                 , function(tx, result) {
                     myApp.addNotification({ message: 'Se ha editado el con éxito', hold: 2000});
                     mainView.router.loadPage({pageName: 'contactos', ignoreCache: true, force: true});
