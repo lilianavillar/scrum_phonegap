@@ -396,6 +396,14 @@ module.exports = [
         ]
     },
     {
+        "id": "cordova-plugin-hybrid.HybridBridge",
+        "file": "plugins/cordova-plugin-hybrid/www/HybridBridge.js",
+        "pluginId": "cordova-plugin-hybrid",
+        "clobbers": [
+            "HybridBridge"
+        ]
+    },
+    {
         "id": "cordova-plugin-inappbrowser.inappbrowser",
         "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
         "pluginId": "cordova-plugin-inappbrowser",
@@ -543,6 +551,7 @@ module.exports.metadata =
     "cordova-plugin-file-transfer": "1.5.1",
     "cordova-plugin-geolocation": "2.1.0",
     "cordova-plugin-globalization": "1.0.6",
+    "cordova-plugin-hybrid": "1.0.0",
     "cordova-plugin-inappbrowser": "1.3.0",
     "cordova-plugin-media": "2.2.0",
     "cordova-plugin-media-capture": "1.2.0",

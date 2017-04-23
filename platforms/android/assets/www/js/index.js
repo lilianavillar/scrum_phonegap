@@ -1,5 +1,6 @@
     var $$ = Dom7;
     var myDB;
+    var emailCorporativo = null;
     myApp = new Framework7({
         material: true, //Activamos Material
         swipePanel: 'left', //Activamos la acción slide para el menú
@@ -16,6 +17,38 @@
         $$('#masterButton').on('click', function(event){
             mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
             $('#menuIcon').show();
+        });
+        $$('#iniciarSesionButton').on('click', function(event){
+            event.preventDefault();
+            var dataForm = $('#inicioForm').serialize();
+            $.ajax({
+                url: 'https://appscrum.herokuapp.com/login',
+                type: 'POST',
+                dataType: 'json',
+                data: dataForm,
+                success: function(data){
+                    console.log(data);
+                    if(data == null){
+                        framework7.addNotification({
+                        message: 'Los datos no corresponden a ningún sprint',
+                        hold: 4000});
+                    }
+                    else{
+                        //El email corporativo que ha iniciado sesión, debemos pasarlo a android
+                        //para poder asignarle los bugs cuando los escane
+                        emailCorporativo = document.getElementById("emailInicio").value;
+                        console.log(emailCorporativo);
+                        HybridBridge.addItem(emailCorporativo, "org.scrum.", function(){console.log("Hybrid Bridge Success")},function(e){console.log("Hybrid Bridge Error" + e)});
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    console.log("ERROR");
+                    console.log(jqXHR.status + "\n" + textStatus + "\n" + errorThrown);
+                    framework7.addNotification({
+                        message: 'Ha ocurrido un problema verificando los datos de acceso.',
+                        hold: 4000})
+                }
+            });
         });
     });
 

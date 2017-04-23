@@ -135,5 +135,13 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-plugin-hybrid": {
+        "source": {
+            "type": "local",
+            "path": "..\\HybridBridgePlugin-master"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

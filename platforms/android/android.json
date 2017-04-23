@@ -57,6 +57,10 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"HybridBridge\"><param name=\"android-package\" value=\"org.sample.hybrid.HybridBridge\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
                             "count": 1
                         },
@@ -191,6 +195,9 @@
             "PACKAGE_NAME": "org.scrum"
         },
         "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "org.scrum"
+        },
+        "cordova-plugin-hybrid": {
             "PACKAGE_NAME": "org.scrum"
         },
         "cordova-plugin-inappbrowser": {
@@ -619,6 +626,14 @@
             ]
         },
         {
+            "id": "cordova-plugin-hybrid.HybridBridge",
+            "file": "plugins/cordova-plugin-hybrid/www/HybridBridge.js",
+            "pluginId": "cordova-plugin-hybrid",
+            "clobbers": [
+                "HybridBridge"
+            ]
+        },
+        {
             "id": "cordova-plugin-inappbrowser.inappbrowser",
             "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
             "pluginId": "cordova-plugin-inappbrowser",
@@ -764,6 +779,7 @@
         "cordova-plugin-file-transfer": "1.5.1",
         "cordova-plugin-geolocation": "2.1.0",
         "cordova-plugin-globalization": "1.0.6",
+        "cordova-plugin-hybrid": "1.0.0",
         "cordova-plugin-inappbrowser": "1.3.0",
         "cordova-plugin-media": "2.2.0",
         "cordova-plugin-media-capture": "1.2.0",

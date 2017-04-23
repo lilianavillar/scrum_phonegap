@@ -37,6 +37,9 @@
         "cordova-plugin-globalization": {
             "PACKAGE_NAME": "org.scrum"
         },
+        "cordova-plugin-hybrid": {
+            "PACKAGE_NAME": "org.scrum"
+        },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "org.scrum"
         },
