@@ -17,7 +17,9 @@
     <!--Este es el menú-->
     <div class="panel panel-left panel-cover">
         <p>Opciones SCRUM Master</p>
-         <p><a href="#contactos" class="close-panel">Gestionar miembros equipo</a></p>
+        <p><a href="#index" class="close-panel">Pila de producto</a></p>
+        <p><a href="#contactos" class="close-panel">Miembros equipo</a></p>
+        <p><a href="#passwd" class="close-panel">Contraseña</a></p>
     </div>
     <!--Creamos el contenedor de vistas-->
     <div class="views">
@@ -38,9 +40,27 @@
 
                         </div>
                     </div>
+                    <!-- Butón flotante para añadir nuevos bugs e iniciar un nuevo sprint -->
+                    <div class="speed-dial">
+                        <a href="#" class="floating-button">
+                            <i class="icon icon-plus"></i>
+                            <i class="icon icon-close"></i>
+                        </a>
+                        <div class="speed-dial-buttons">
+                            <a id="irNuevoBugButton" href="#">
+                                <i class="f7-icons">add</i>
+                            </a>
+                            <a href="#">
+                                <i class="f7-icons">play</i>
+                            </a>
+                            <a href="#">
+                                <i class="icon demo-icon-upload"></i>
+                            </a>
+                        </div>
+                    </div>
                     <!--El contenido de la página-->
                     <div class="page-content">
-                        ESTA ES LA PÁGINA PRINCIPAL
+                        <div id="bugsList" class="list-block virtual-list"></div>
                     </div>
                 </div>
     <!--
@@ -61,8 +81,7 @@
                         <i class="icon icon-plus"></i>
                     </a>
                     <div class="page-content">
-                        <div id="contactosList" class="list-block virtual-list">
-                        </div>
+                        <div id="contactosList" class="list-block virtual-list"></div>
                     </div>
                 </div>
     <!--
@@ -135,9 +154,9 @@
                     </div>
                 </div>
 
-                <!--
-                PAGINA EDITAR CONTACTO
-                !-->
+    <!--
+    PAGINA EDITAR CONTACTO
+    !-->
                 <div class="page cached" data-page="editarContacto">
                     <div class="navbar">
                         <div class="navbar-inner">
@@ -204,6 +223,184 @@
                         </p>
                     </div>
                 </div>
+    <!--
+    PAGINA NUEVO BUG
+    !-->
+                <div class="page cached" data-page="nuevoBug">
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center">Nuevo bug</div>
+                            <div class="right">
+                                <a href="#" class="open-panel link icon-only right">
+                                    <i class="icon icon-bars"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <form id="nuevoBugForm" class="list-block">
+                            <ul>
+                                <!-- Título -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="text" id="tituloBug" name="tituloBug" placeholder="Título">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Descripción -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <textarea  id="descripcionBug" name="descripcionBug" placeholder="Descripcion"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Prioridad -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">email</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <div class="range-slider">
+                                                    <input id="prioridadBug" name="prioridadBug" type="range" min="0" max="10" step="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Estimación horas -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">time</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="number" id="horasBug" name="horasBug" placeholder="Estimacion horaria">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </form>
+                        <p class="buttons-row">
+                            <a id="cancelarBugButton" href="#index" class="button button-raised">Cancelar</a>
+                            <a id="nuevoBugButton" href="#" class="button button-fill button-raised">Aceptar</a>
+                        </p>
+                    </div>
+                </div>
+    <!--
+    PAGINA EDICION BUG
+    !-->
+                <div class="page cached" data-page="editarBug">
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center">Editar bug</div>
+                            <div class="right">
+                                <a href="#" class="open-panel link icon-only right">
+                                    <i class="icon icon-bars"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <form id="editarBugForm" class="list-block">
+                            <ul>
+                                <!-- Título -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="text" id="editarTituloBug" name="editarTituloBug" placeholder="Título">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Descripción -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <textarea  id="editarDescripcionBug" name="editarDescripcionBug" placeholder="Descripcion"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Prioridad -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">email</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <div class="range-slider">
+                                                    <input id="editarPrioridadBug" name="editarPrioridadBug" type="range" min="0" max="10" step="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Estimación horas -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">time</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="number" id="editarHorasBug" name="editarHorasBug" placeholder="Estimacion horaria">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </form>
+                        <p class="buttons-row">
+                            <a id="cancelarEditarBugButton" href="#index" class="button button-raised">Cancelar</a>
+                            <a id="editarBugButton" href="#" class="button button-fill button-raised">Aceptar</a>
+                        </p>
+                    </div>
+                </div>
+   <!--
+   PÁGINA PASSWD
+   !-->
+                <div class="page cached" data-page="passwd">
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center"></div>
+                            <div class="right">
+                                <a href="#" class="open-panel link icon-only right">
+                                    <i class="icon icon-bars"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <form id="passwdForm" class="list-block">
+                            <ul>
+                                <!-- passwd -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-input">
+                                                <input type="text" id="passwd" name="passwd" placeholder="Contraseña">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </form>
+                        <p class="buttons-row">
+                            <a id="cancelarPasswdButton" href="#contactos" class="button button-raised">Cancelar</a>
+                            <a id="nuevaPasswdButton" href="#" class="button button-fill button-raised button-nuevo-contacto">Aceptar</a>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -212,7 +409,7 @@
     <script type="text/javascript" src="js/framework7.min.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script>
-    app.initialize();
+        app.initialize();
     </script>
 </body>
 </html>
