@@ -16,10 +16,10 @@
     <div class="panel-overlay"></div>
     <!--Este es el menú-->
     <div class="panel panel-left panel-cover">
-        <p>Opciones SCRUM Master</p>
-        <p><a href="#index" class="close-panel">Pila de producto</a></p>
-        <p><a href="#contactos" class="close-panel">Miembros equipo</a></p>
-        <p><a href="#passwd" class="close-panel">Contraseña</a></p>
+        <p id="masterMenu">Opciones SCRUM Master</p>
+        <p><a href="#bugs" class="close-panel" id="pilaMenu">Pila de producto</a></p>
+        <p><a href="#contactos" class="close-panel" id="equipoMenu">Miembros equipo</a></p>
+        <p><a href="#passwd" class="close-panel" id="passwdMenu">Contraseña</a></p>
     </div>
     <!--Creamos el contenedor de vistas-->
     <div class="views">
@@ -32,12 +32,76 @@
                     <div class="navbar">
                         <div class="navbar-inner">
                             <div class="center">ScrumApp</div>
-                            <div class="right">
+                            <div class="right" id="menuIcon">
                                 <a href="#" class="open-panel link icon-only right">
                                     <i class="icon icon-bars"></i>
                                 </a>
                             </div>
 
+                        </div>
+                    </div>
+                    <!--El contenido de la página-->
+                    <div class="page-content">
+                        <form id="inicionForm" class="list-block">
+                            <ul>
+                                <!-- Sprint -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title label">Sprint</div>
+                                            <div class="item-input">
+                                                <input type="text" id="sprintInicio" name="sprintInicio" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Passwd -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">lock</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title label">Contraseña</div>
+                                            <div class="item-input">
+                                                <input type="text" id="passwdInicio" name="passwdInicio">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Email -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">email</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title label">Email corporativo</div>
+                                            <div class="item-input">
+                                                <input type="email" id="emailInicio" name="emailInicio" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </form>
+                        <p class="buttons-row">
+                            <a id="iniciarSesionButton" href="#" class="button button-fill button-raised">Iniciar sesión</a>
+                        </p>
+                        <p>
+                            <a href="#bugs" class="button" id="masterButton">Soy SCRUM MASTER</a>
+                        </p>
+                    </div>
+                </div>
+    <!--
+     PAGINA LISTADO BUGS
+     -->
+                <div class="page cached" data-page="bugs">
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center">Pila de producto</div>
+                            <div class="right">
+                                <a href="#" class="open-panel link icon-only right">
+                                    <i class="icon icon-bars"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <!-- Butón flotante para añadir nuevos bugs e iniciar un nuevo sprint -->
@@ -53,12 +117,8 @@
                             <a href="#">
                                 <i class="f7-icons">play</i>
                             </a>
-                            <a href="#">
-                                <i class="icon demo-icon-upload"></i>
-                            </a>
                         </div>
                     </div>
-                    <!--El contenido de la página-->
                     <div class="page-content">
                         <div id="bugsList" class="list-block virtual-list"></div>
                     </div>
@@ -106,8 +166,9 @@
                                     <div class="item-content">
                                         <div class="item-media"><i class="icon f7-icons">person</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Nombre</div>
                                             <div class="item-input">
-                                                <input type="text" id="nombre" name="nombre" placeholder="Nombre">
+                                                <input type="text" id="nombre" name="nombre" >
                                             </div>
                                         </div>
                                     </div>
@@ -117,8 +178,9 @@
                                     <div class="item-content">
                                         <div class="item-media"><i class="icon f7-icons">person</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Apellidos</div>
                                             <div class="item-input">
-                                                <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos">
+                                                <input type="text" id="apellidos" name="apellidos">
                                             </div>
                                         </div>
                                     </div>
@@ -128,8 +190,9 @@
                                     <div class="item-content">
                                         <div class="item-media"><i class="icon f7-icons">email</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Email corporativo</div>
                                             <div class="item-input">
-                                                <input type="email" id="email" name="email" placeholder="Email corporativo">
+                                                <input type="email" id="email" name="email" >
                                             </div>
                                         </div>
                                     </div>
@@ -139,8 +202,9 @@
                                     <div class="item-content">
                                         <div class="item-media"><i class="icon f7-icons">time</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Horas</div>
                                             <div class="item-input">
-                                                <input type="number" id="horas" name="horas" placeholder="Horas semanales">
+                                                <input type="number" id="horas" name="horas">
                                             </div>
                                         </div>
                                     </div>
@@ -176,6 +240,7 @@
                                     <div class="item-content">
                                         <div class="item-media"><i class="icon f7-icons">person</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Nombre</div>
                                             <div class="item-input">
                                                 <input type="text" id="editarNombre" name="editarNombre" placeholder="Nombre">
                                             </div>
@@ -187,6 +252,7 @@
                                     <div class="item-content">
                                         <div class="item-media"><i class="icon f7-icons">person</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Apellidos</div>
                                             <div class="item-input">
                                                 <input type="text" id="editarApellidos" name="editarApellidos" placeholder="Apellidos">
                                             </div>
@@ -198,6 +264,7 @@
                                     <div class="item-content">
                                         <div class="item-media"><i class="icon f7-icons">email</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Email corporativo</div>
                                             <div class="item-input">
                                                 <input type="email" id="editarEmail" name="editarEmail" readonly="true">
                                             </div>
@@ -209,6 +276,7 @@
                                     <div class="item-content">
                                         <div class="item-media"><i class="icon f7-icons">time</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Horas</div>
                                             <div class="item-input">
                                                 <input type="number" id="editarHoras" name="editarHoras" placeholder="Horas semanales">
                                             </div>
@@ -243,10 +311,11 @@
                                 <!-- Título -->
                                 <li>
                                     <div class="item-content">
-                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-media"><i class="icon f7-icons">tags</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Título</div>
                                             <div class="item-input">
-                                                <input type="text" id="tituloBug" name="tituloBug" placeholder="Título">
+                                                <input type="text" id="tituloBug" name="tituloBug">
                                             </div>
                                         </div>
                                     </div>
@@ -254,10 +323,11 @@
                                 <!-- Descripción -->
                                 <li>
                                     <div class="item-content">
-                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-media"><i class="icon f7-icons">compose</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Descripción</div>
                                             <div class="item-input">
-                                                <textarea  id="descripcionBug" name="descripcionBug" placeholder="Descripcion"></textarea>
+                                                <textarea  id="descripcionBug" name="descripcionBug" ></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -265,11 +335,12 @@
                                 <!-- Prioridad -->
                                 <li>
                                     <div class="item-content">
-                                        <div class="item-media"><i class="icon f7-icons">email</i></div>
+                                        <div class="item-media"><i class="icon f7-icons">list</i></div>
                                         <div class="item-inner">
                                             <div class="item-input">
-                                                <div class="range-slider">
-                                                    <input id="prioridadBug" name="prioridadBug" type="range" min="0" max="10" step="1">
+                                                <div class="item-title label">Prioridad</div>
+                                                <div class="item-input">
+                                                    <input type="number" id="prioridadBug" name="prioridadBug" placeholder="Prioridad">
                                                 </div>
                                             </div>
                                         </div>
@@ -281,6 +352,7 @@
                                         <div class="item-media"><i class="icon f7-icons">time</i></div>
                                         <div class="item-inner">
                                             <div class="item-input">
+                                                <div class="item-title label">Estimación</div>
                                                 <input type="number" id="horasBug" name="horasBug" placeholder="Estimacion horaria">
                                             </div>
                                         </div>
@@ -289,7 +361,7 @@
                             </ul>
                         </form>
                         <p class="buttons-row">
-                            <a id="cancelarBugButton" href="#index" class="button button-raised">Cancelar</a>
+                            <a id="cancelarBugButton" href="#bugs" class="button button-raised">Cancelar</a>
                             <a id="nuevoBugButton" href="#" class="button button-fill button-raised">Aceptar</a>
                         </p>
                     </div>
@@ -314,8 +386,9 @@
                                 <!-- Título -->
                                 <li>
                                     <div class="item-content">
-                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-media"><i class="icon f7-icons">tags</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Título</div>
                                             <div class="item-input">
                                                 <input type="text" id="editarTituloBug" name="editarTituloBug" placeholder="Título">
                                             </div>
@@ -325,9 +398,10 @@
                                 <!-- Descripción -->
                                 <li>
                                     <div class="item-content">
-                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-media"><i class="icon f7-icons">compose</i></div>
                                         <div class="item-inner">
                                             <div class="item-input">
+                                                <div class="item-title label">Descripción</div>
                                                 <textarea  id="editarDescripcionBug" name="editarDescripcionBug" placeholder="Descripcion"></textarea>
                                             </div>
                                         </div>
@@ -336,11 +410,85 @@
                                 <!-- Prioridad -->
                                 <li>
                                     <div class="item-content">
-                                        <div class="item-media"><i class="icon f7-icons">email</i></div>
+                                        <div class="item-media"><i class="icon f7-icons">list</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Prioridad</div>
                                             <div class="item-input">
-                                                <div class="range-slider">
-                                                    <input id="editarPrioridadBug" name="editarPrioridadBug" type="range" min="0" max="10" step="1">
+                                                    <input type="number" id="editarPrioridadBug" name="editarPrioridadBug" placeholder="Prioridad">
+                                                </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Estimación horas -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">time</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title label">Estimación</div>
+                                            <div class="item-input">
+                                                <input type="number" id="editarHorasBug" name="editarHorasBug" placeholder="Estimacion horaria">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </form>
+                        <p class="buttons-row">
+                            <a id="cancelarEditarBugButton" href="#bugs" class="button button-raised">Cancelar</a>
+                            <a id="editarBugButton" href="#" class="button button-fill button-raised">Aceptar</a>
+                        </p>
+                    </div>
+                </div>
+    <!--
+    PAGINA VER BUG
+    !-->
+                <div class="page cached" data-page="verBug">
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="center">Bug</div>
+                            <div class="right">
+                                <a href="#" class="open-panel link icon-only right">
+                                    <i class="icon icon-bars"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <form id="verBugForm" class="list-block">
+                            <ul>
+                                <!-- Título -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">tags</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title label">Título</div>
+                                            <div class="item-input">
+                                                <input type="text" id="verTituloBug" name="verTituloBug" placeholder="Título" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Descripción -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">compose</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title label">Descripción</div>
+                                            <div class="item-input">
+                                                <textarea  id="verDescripcionBug" name="verDescripcionBug" placeholder="Descripcion" readonly></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Prioridad -->
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="icon f7-icons">list</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title label">Prioridad</div>
+                                            <div class="item-input">
+                                                <div class="item-input">
+                                                    <input type="number" id="verPrioridadBug" name="verPrioridadBug" placeholder="Prioridad" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -351,8 +499,9 @@
                                     <div class="item-content">
                                         <div class="item-media"><i class="icon f7-icons">time</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Estimación</div>
                                             <div class="item-input">
-                                                <input type="number" id="editarHorasBug" name="editarHorasBug" placeholder="Estimacion horaria">
+                                                <input type="number" id="verHorasBug" name="verHorasBug" placeholder="Estimacion horaria" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -360,8 +509,7 @@
                             </ul>
                         </form>
                         <p class="buttons-row">
-                            <a id="cancelarEditarBugButton" href="#index" class="button button-raised">Cancelar</a>
-                            <a id="editarBugButton" href="#" class="button button-fill button-raised">Aceptar</a>
+                            <a id="volverBugButton" href="#bugs" class="button button-raised">Volver</a>
                         </p>
                     </div>
                 </div>
@@ -371,7 +519,7 @@
                 <div class="page cached" data-page="passwd">
                     <div class="navbar">
                         <div class="navbar-inner">
-                            <div class="center"></div>
+                            <div class="center">Contraseña del sprint</div>
                             <div class="right">
                                 <a href="#" class="open-panel link icon-only right">
                                     <i class="icon icon-bars"></i>
@@ -385,10 +533,11 @@
                                 <!-- passwd -->
                                 <li>
                                     <div class="item-content">
-                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                        <div class="item-media"><i class="icon f7-icons">lock</i></div>
                                         <div class="item-inner">
+                                            <div class="item-title label">Contraseña</div>
                                             <div class="item-input">
-                                                <input type="text" id="passwd" name="passwd" placeholder="Contraseña">
+                                                <input type="text" id="passwd" name="passwd">
                                             </div>
                                         </div>
                                     </div>
@@ -396,7 +545,7 @@
                             </ul>
                         </form>
                         <p class="buttons-row">
-                            <a id="cancelarPasswdButton" href="#contactos" class="button button-raised">Cancelar</a>
+                            <a id="cancelarPasswdButton" href="#bugs" class="button button-raised">Cancelar</a>
                             <a id="nuevaPasswdButton" href="#" class="button button-fill button-raised button-nuevo-contacto">Aceptar</a>
                         </p>
                     </div>

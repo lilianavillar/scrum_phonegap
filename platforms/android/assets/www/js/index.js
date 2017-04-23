@@ -12,16 +12,23 @@
     });
 
     myApp.onPageInit("index", function(){
-        $$('#irNuevoBugButton').on('click', function(event){
-            mainView.router.loadPage({pageName: 'nuevoBug', ignoreCache: true, force: true});
+        $('#menuIcon').hide();
+        $$('#masterButton').on('click', function(event){
+            mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
+            $('#menuIcon').show();
         });
-        alert("INICIO");
-    });
-    myApp.onPageBeforeAnimation("index", function(){
-       cargarBugs();
     });
 
     myApp.init();
+
+    myApp.onPageInit("bugs", function(){
+            $$('#irNuevoBugButton').on('click', function(event){
+                mainView.router.loadPage({pageName: 'nuevoBug', ignoreCache: true, force: true});
+            });
+        });
+        myApp.onPageBeforeAnimation("bugs", function(){
+           cargarBugs();
+        });
 
     var app = {
         initialize: function() {
@@ -39,19 +46,15 @@
            myDB.transaction(function(transaction) {
                 transaction.executeSql('CREATE TABLE IF NOT EXISTS bug (id integer primary key, titulo text, descripcion text, estado text, prioridad integer, estimacion integer, horas integer, miembro_id integer, FOREIGN KEY(miembro_id) REFERENCES contacto(id))', [],
                 function(tx, result) {
-                    alert("CREADA");
                 },
                 function(error) {
-                    alert("SIN TABLA");
                 });
             });
             myDB.transaction(function(transaction) {
                 transaction.executeSql('CREATE TABLE IF NOT EXISTS passwd (passwd text)', [],
                 function(tx, result) {
-                    alert("CREADA");
                 },
                 function(error) {
-                    alert("SIN TABLA");
                 });
             });
             cargarBugs();
@@ -129,9 +132,22 @@
                 });
              });
         },
-         modificarPasswd: function(){
-
-        },
+        verBug: function(id){
+              myDB.transaction(function(transaction) {
+              transaction.executeSql('SELECT * FROM bug WHERE id=?', [id],
+                  function (tx, results) {
+                      //Se muestran en el formulario de editar contacto
+                      document.getElementById("verTituloBug").value = results.rows.item(0).titulo;
+                      document.getElementById("verDescripcionBug").value = results.rows.item(0).descripcion;
+                      document.getElementById("verPrioridadBug").value = results.rows.item(0).estimacion;
+                      document.getElementById("verHorasBug").value =results.rows.item(0).prioridad;
+                      mainView.router.loadPage({pageName: 'verBug' , ignoreCache: true, force: true});
+                  },
+                  function(error){
+                      myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
+                  });
+               });
+          }
     };
 
     function cargarBugs(){
@@ -157,7 +173,7 @@
                        // Template 7 template to render each item
                        template: '<li class="swipeout">'+
                              '<div class="swipeout-content">'+
-                                 '<a href="#" class="item-link item-content">'+
+                                 '<a onclick="app.verBug(\'{{id}}\');" class="item-link item-content">'+
                                      '<div class="item-inner">'+
                                          '<div class="item-title">{{titulo}} {{estado}} - {{prioridad}} </div>'+
                                          '<div class="item-after"><span class="badge">{{estimacion}}h</span></div>'+
@@ -284,6 +300,8 @@
 
     myApp.onPageBeforeAnimation("nuevoBug", function(){
          $$('#nuevoBugForm')[0].reset();
+         document.getElementById("prioridadBug").value = 0;
+         document.getElementById("horasBug").value = 1;
     });
 
     myApp.onPageInit("nuevoBug", function(){
@@ -302,7 +320,7 @@
                 transaction.executeSql(executeQuery, [titulo, descripcion, estado, prioridad, estimacion, horas],
                 function(tx, result) {
                     myApp.addNotification({ message: 'Nuevo bug añadido con éxito', hold: 2000});
-                    mainView.router.loadPage({pageName: 'index', ignoreCache: true, force: true});
+                    mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
                 },
                 function(error){
                     console.log(error);
@@ -326,7 +344,7 @@
                 transaction.executeSql(executeQuery, [titulo, descripcion, prioridad, horas, id],
                 function(tx, result) {
                     myApp.addNotification({ message: 'Se ha editado el bug con éxito', hold: 2000});
-                    mainView.router.loadPage({pageName: 'index', ignoreCache: true, force: true});
+                    mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
                 },
                 function(error){
                     myApp.addNotification({ message: 'Ha ocurrido un error al editar el bug', hold: 2000});
@@ -367,7 +385,7 @@
                                 transaction.executeSql(executeQuery, [passwd],
                                 function(tx, result) {
                                     myApp.addNotification({ message: 'Nueva contraseña añadida con éxito', hold: 2000});
-                                    mainView.router.loadPage({pageName: 'index', ignoreCache: true, force: true});
+                                    mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
                                 },
                                 function(error){
                                     myApp.addNotification({ message: 'Ha ocurrido un error al añadir la contraseña', hold: 2000});
@@ -380,7 +398,7 @@
                                 transaction.executeSql(executeQuery, [passwd],
                                 function(tx, result) {
                                     myApp.addNotification({ message: 'Contraseña modificada con éxito', hold: 2000});
-                                    mainView.router.loadPage({pageName: 'index', ignoreCache: true, force: true});
+                                    mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
                                 },
                                 function(error){
                                     myApp.addNotification({ message: 'Ha ocurrido un error al modificar la contraseña', hold: 2000});
