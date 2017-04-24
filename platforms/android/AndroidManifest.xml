@@ -36,7 +36,8 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/estiloScrumApp">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
@@ -50,7 +51,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main2Activity"></activity>
+        <activity
+            android:name=".BugsListActivity"
+            android:label="@string/title_activity_bugs_list"
+            android:theme="@style/estiloScrumApp.NoActionBar" />
+        <activity
+            android:name=".BugsMasterListActivity"
+            android:label="@string/title_activity_bugs_master_list"
+            android:theme="@style/estiloScrumApp.NoActionBar"></activity>
     </application>
 
 </manifest>

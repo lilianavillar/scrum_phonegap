@@ -3,4 +3,6 @@
     <string name="app_name">scrumApp</string>
     <string name="launcher_name">@string/app_name</string>
     <string name="activity_name">@string/launcher_name</string>
+    <string name="title_activity_bugs_list">BugsListActivity</string>
+    <string name="title_activity_bugs_master_list">BugsMasterListActivity</string>
 </resources>

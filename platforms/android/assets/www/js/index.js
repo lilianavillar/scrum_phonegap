@@ -20,6 +20,12 @@
         });
         $$('#iniciarSesionButton').on('click', function(event){
             event.preventDefault();
+            var email = document.getElementById("emailInicio").value;
+            var nombre = document.getElementById("sprintInicio").value;
+            var paswd = document.getElementById("passwdInicio").value;
+            if(!email || !nombre || !passwd){
+                alert("Debe rellenar todos los datos");
+            } else {
             var dataForm = $('#inicioForm').serialize();
             $.ajax({
                 url: 'https://appscrum.herokuapp.com/login',
@@ -29,39 +35,42 @@
                 success: function(data){
                     console.log(data);
                     if(data == null){
-                        framework7.addNotification({
+                        myApp.addNotification({
                         message: 'Los datos no corresponden a ningún sprint',
                         hold: 4000});
                     }
                     else{
                         //El email corporativo que ha iniciado sesión, debemos pasarlo a android
                         //para poder asignarle los bugs cuando los escane
-                        emailCorporativo = document.getElementById("emailInicio").value;
-                        console.log(emailCorporativo);
-                        HybridBridge.addItem(emailCorporativo, "org.scrum.", function(){console.log("Hybrid Bridge Success")},function(e){console.log("Hybrid Bridge Error" + e)});
+
+                        HybridBridge.addItem(nombre + "@" + passwd, "org.scrum.BugsListActivity", function(){console.log("Hybrid Bridge Success")},function(e){console.log("Hybrid Bridge Error" + e)});
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown){
                     console.log("ERROR");
                     console.log(jqXHR.status + "\n" + textStatus + "\n" + errorThrown);
-                    framework7.addNotification({
+                    myApp.addNotification({
                         message: 'Ha ocurrido un problema verificando los datos de acceso.',
                         hold: 4000})
                 }
             });
+            }
         });
     });
 
     myApp.init();
 
     myApp.onPageInit("bugs", function(){
-            $$('#irNuevoBugButton').on('click', function(event){
-                mainView.router.loadPage({pageName: 'nuevoBug', ignoreCache: true, force: true});
-            });
+        $$('#irNuevoBugButton').on('click', function(event){
+            mainView.router.loadPage({pageName: 'nuevoBug', ignoreCache: true, force: true});
         });
-        myApp.onPageBeforeAnimation("bugs", function(){
-           cargarBugs();
+        $$('#iniciarSprintButton').on('click', function(event){
+            HybridBridge.addItem(null, "org.scrum.BugsMasterListActivity", function(){console.log("Hybrid Bridge Success")},function(e){console.log("Hybrid Bridge Error" + e)});
         });
+    });
+    myApp.onPageBeforeAnimation("bugs", function(){
+       cargarBugs();
+    });
 
     var app = {
         initialize: function() {
@@ -90,6 +99,18 @@
                 function(error) {
                 });
             });
+            myDB.transaction(function(transaction) {
+                transaction.executeSql('SELECT * FROM passwd', [],
+                    function (tx, results) {
+                        //Se obtienen los valores del contacto a actualizar
+                        passwdActual = results.rows.item(0).passwd;
+                        //Se muestran en el formulario de editar contacto
+                        document.getElementById("passwd").value = passwdActual;
+                    },
+                    function(error){
+                        myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
+                    });
+                });
             cargarBugs();
         },
         eliminarContacto: function(email){
@@ -345,7 +366,7 @@
             var descripcion = $("#descripcionBug").val();
             var prioridad = $("#prioridadBug").val();
             var estimacion = $("#horasBug").val();
-            var estado = "PENDIENTE";
+            var estado = "Pendiente";
             var horas= 0;
 
             myDB.transaction(function(transaction) {
