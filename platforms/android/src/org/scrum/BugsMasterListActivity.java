@@ -9,12 +9,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.google.zxing.common.StringUtils;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.HttpGet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -40,10 +43,17 @@ public class BugsMasterListActivity extends AppCompatActivity {
     private CoordinatorLayout coordinator;
 
     @Override
+    public void onBackPressed() {
+        Intent main = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(main);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bugs_master_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Intent intent = this.getIntent();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.masterBugsToolbar);
         setSupportActionBar(toolbar);
         this.listView = (ListView) findViewById(R.id.masterBugsList);
         this.coordinator = (CoordinatorLayout) findViewById(R.id.coordinatorBugsMasterList);
@@ -54,28 +64,20 @@ public class BugsMasterListActivity extends AppCompatActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        setResult(RESULT_OK, intent);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     private void crearBugsList() throws JSONException, UnsupportedEncodingException {
 
         bugsList = new ArrayList<Bug>();
 
-        SQLiteDatabase db =  openOrCreateDatabase("mySQLite.db", MODE_PRIVATE, null);
+        final SQLiteDatabase db =  openOrCreateDatabase("mySQLite.db", MODE_PRIVATE, null);
         int numero = (int) (Math.random() *20) + 1;
         Cursor c = db.rawQuery("SELECT * FROM bug ORDER BY prioridad ASC LIMIT " + numero, null);
         JSONArray allBugs = cur2Json(c);
         //Aquí habría que hacer el procesamiento para elegir los bugs
-        //de momento se seleccionan un numero aleatorio de bugs y se seleccionan los más
-        // prioritarios.
+        //de momento se seleccionan un numero aleatorio de bugs y se seleccionan los más prioritarios.
         //Mostramos por pantalla los bugs que van a formar parte del SPRINT
         Bug[] mcArray = new Gson().fromJson(allBugs.toString(), Bug[].class);
         bugsList = Arrays.asList(mcArray);
@@ -85,13 +87,12 @@ public class BugsMasterListActivity extends AppCompatActivity {
         String contrasenia = "";
         Cursor cp = db.rawQuery("SELECT * FROM passwd", null);
         if (cp.moveToFirst()) {
-            //Recorremos el cursor hasta que no haya más registros
             do {
                 contrasenia = cp.getString(0);
             } while(cp.moveToNext());
         }
 
-        SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeStampFormat = new SimpleDateFormat("MMddHHmm");
         Date myDate = new Date();
         String hoy = timeStampFormat.format(myDate);
         JSONObject jsonObj = new JSONObject();
@@ -100,18 +101,22 @@ public class BugsMasterListActivity extends AppCompatActivity {
         jsonObj.put("passwd", contrasenia);
         jsonObj.put("bugs", allBugs);
 
+        //Se cambia el titulo de la activity
+        Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.masterBugsToolbar);
+        setSupportActionBar(mActionBarToolbar);
+        getSupportActionBar().setTitle("Sprint" + hoy);
+
+
         StringEntity entity = new StringEntity(jsonObj.toString());
         client.post(this, "https://appscrum.herokuapp.com/sprints", entity, "application/json", new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
+                    //Eliminamos los bugs que han entrado en el Sprint de la pila de producto
+                    borrarBugsFromPilaProducto(db);
+                    db.close();
                     //Notificación
-                    Snackbar bar = Snackbar.make(coordinator, "El sprint se ha creado con éxito.", Snackbar.LENGTH_LONG)
-                    .setAction("CLOSE", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        }
-                    });
+                    Snackbar bar = Snackbar.make(coordinator, "El sprint se ha creado con éxito.", Snackbar.LENGTH_LONG);
                     bar.show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -123,21 +128,23 @@ public class BugsMasterListActivity extends AppCompatActivity {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 //Notificación
                 Snackbar bar = Snackbar.make(coordinator, "Error al crear el sprint.", Snackbar.LENGTH_LONG)
-                        .setAction("CLOSE", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                            }
-                        });
+                    .setAction("CLOSE", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    });
                 bar.show();
             }
-
         });
+    }
 
-
-
-
-
-
+    private void borrarBugsFromPilaProducto(SQLiteDatabase db) {
+        String[] ids = new String[bugsList.size()];
+        for(int i = 0; i<bugsList.size(); i++){
+            ids[i] = String.valueOf(bugsList.get(i).getId());
+        }
+        String idsCSV = TextUtils.join(",", ids);
+        db.delete("bug", "id IN (" + idsCSV + ")", null);
     }
 
     public JSONArray cur2Json(Cursor cursor) {

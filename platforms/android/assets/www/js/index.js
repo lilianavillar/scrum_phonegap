@@ -14,6 +14,23 @@
 
     myApp.onPageInit("index", function(){
         $('#menuIcon').hide();
+        $$('#pilaMenu').on('click', function(event){
+            mainView.router.loadPage({pageName: 'bugs'});
+            /*for (var i = 0; i < mainView.history.length; i++) {
+              if (mainView.history[i] === '#contactos') mainView.history.splice(i,1);
+            }
+            //So when you are on login page, details page sit on left:
+            $$('.view-main .page-on-left, .view-main .navbar-on-left').remove();*/
+        });
+        $$('#equipoMenu').on('click', function(event){
+            mainView.router.loadPage({pageName: 'contactos'});
+            /*
+            for (var i = 0; i < mainView.history.length; i++) {
+              if (mainView.history[i] === '#bugs') mainView.history.splice(i,1);
+            }
+            //So when you are on login page, details page sit on left:
+            $$('.view-main .page-on-left, .view-main .navbar-on-left').remove();*/
+        });
         $$('#masterButton').on('click', function(event){
             mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
             $('#menuIcon').show();
@@ -65,17 +82,69 @@
             mainView.router.loadPage({pageName: 'nuevoBug', ignoreCache: true, force: true});
         });
         $$('#iniciarSprintButton').on('click', function(event){
-            HybridBridge.addItem(null, "org.scrum.BugsMasterListActivity", function(){console.log("Hybrid Bridge Success")},function(e){console.log("Hybrid Bridge Error" + e)});
+            myDB.readTransaction(function(transaction) {
+                transaction.executeSql('SELECT COUNT(*) AS c FROM bug', [],
+                    function (tx, results) {
+                        if(results.rows.item(0).c > 0){
+                        mainView.history.splice(1, 1);
+                            HybridBridge.addItem(null, "org.scrum.BugsMasterListActivity", function(){console.log("Hybrid Bridge Success")},function(e){console.log("Hybrid Bridge Error" + e)});
+                        } else {
+                            myApp.addNotification({ message: 'No existen bugs en la lista de producto. Por favor, incluya primero tareas en la pila de producto', hold: 2000});
+                        }
+                    },
+                    function(error){
+                        myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
+                    });
+            });
         });
     });
     myApp.onPageBeforeAnimation("bugs", function(){
-       cargarBugs();
+        cargarBugs();
     });
+
+    $$(document).on('page:init', function (e) {
+        var page = e.detail.page;
+
+    });
+
+    $$(document).on('page:beforeInit', function (e) {
+            var page = e.detail.page;
+
+        });
+
+        $$(document).on('page:reinit', function (e) {
+                var page = e.detail.page;
+
+            });
+
+            $$(document).on('page:beforeAnimation', function (e) {
+                    var page = e.detail.page;
+
+                });
+
+                $$(document).on('page:back', function (e) {
+                                    var page = e.detail.page;
+
+                                });
+
+                                $$(document).on('page:afterAnimation', function (e) {
+                                                    var page = e.detail.page;
+
+                                                });
+    $$(document).on('page:afterBack', function (e) {
+                        var page = e.detail.page;
+
+                    });
 
     var app = {
         initialize: function() {
             document.addEventListener("deviceready", this.init, false);
+            //document.addEventListener("backbutton", this.onBackKeyDown, false);
+
         },
+        /*onBackKeyDown : function(){
+            var prueba = mainView;
+        },*/
         init: function() {
             myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db", location: 'default'});
             myDB.transaction(function(transaction) {
@@ -85,7 +154,7 @@
                 function(error) {
                 });
             });
-           myDB.transaction(function(transaction) {
+            myDB.transaction(function(transaction) {
                 transaction.executeSql('CREATE TABLE IF NOT EXISTS bug (id integer primary key, titulo text, descripcion text, estado text, prioridad integer, estimacion integer, horas integer, miembro_id integer, FOREIGN KEY(miembro_id) REFERENCES contacto(id))', [],
                 function(tx, result) {
                 },
@@ -110,7 +179,7 @@
                     function(error){
                         myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
                     });
-                });
+            });
             cargarBugs();
         },
         eliminarContacto: function(email){
@@ -200,13 +269,13 @@
                   function(error){
                       myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
                   });
-               });
+              });
           }
     };
 
     function cargarBugs(){
         var listItems = [];
-       myDB.transaction(function(transaction) {
+        myDB.transaction(function(transaction) {
            transaction.executeSql('SELECT * FROM bug', [], function (tx, results) {
                var len = results.rows.length, i;
                for (i = 0; i < len; i++){
@@ -310,7 +379,8 @@
                                 transaction.executeSql(executeQuery, [nombre, apellidos, email, horas],
                                 function(tx, result) {
                                     myApp.addNotification({ message: 'Nuevo miembro del equipo añadido con éxito', hold: 2000});
-                                    mainView.router.loadPage({pageName: 'contactos', ignoreCache: true, force: true});
+                                    mainView.router.back();
+                                    //mainView.router.loadPage({pageName: 'contactos', ignoreCache: true, force: true});
                                 },
                                 function(error){
                                     myApp.addNotification({ message: 'Ha ocurrido un error al añadir el nuevo miembro', hold: 2000});
@@ -327,6 +397,9 @@
                 );
             });
         });
+        $$('#cancelarContactoButton').on('click', function(event){
+            mainView.router.back();
+        });
     });
 
     myApp.onPageInit("editarContacto", function(){
@@ -342,13 +415,17 @@
                 transaction.executeSql(executeQuery, [nombre, apellidos, horas, email],
                 function(tx, result) {
                     myApp.addNotification({ message: 'Se ha editado el con éxito', hold: 2000});
-                    mainView.router.loadPage({pageName: 'contactos', ignoreCache: true, force: true});
+                    mainView.router.back();
+                    //mainView.router.loadPage({pageName: 'contactos', ignoreCache: true, force: true});
                 },
                 function(error){
                     myApp.addNotification({ message: 'Ha ocurrido un error al editar el contacto', hold: 2000});
                 });
             });
 
+        });
+        $$('#cancelarEditarButton').on('click', function(event){
+            mainView.router.back();
         });
     });
 
@@ -374,13 +451,18 @@
                 transaction.executeSql(executeQuery, [titulo, descripcion, estado, prioridad, estimacion, horas],
                 function(tx, result) {
                     myApp.addNotification({ message: 'Nuevo bug añadido con éxito', hold: 2000});
-                    mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
+                    mainView.router.back();
+                    //mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
+                    //mainView.destroy();
                 },
                 function(error){
                     console.log(error);
                     myApp.addNotification({ message: 'Ha ocurrido un error al añadir el nuevo bug', hold: 2000});
                     });
             });
+        });
+        $$('#cancelarBugButton').on('click', function(event){
+            mainView.router.back();
         });
     });
 
@@ -398,13 +480,23 @@
                 transaction.executeSql(executeQuery, [titulo, descripcion, prioridad, horas, id],
                 function(tx, result) {
                     myApp.addNotification({ message: 'Se ha editado el bug con éxito', hold: 2000});
-                    mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
+                    mainView.router.back();
+                    //mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
                 },
                 function(error){
                     myApp.addNotification({ message: 'Ha ocurrido un error al editar el bug', hold: 2000});
                 });
             });
 
+        });
+        $$('#cancelarEditarBugButton').on('click', function(event){
+            mainView.router.back();
+        });
+    });
+
+    myApp.onPageInit("verBug", function(){
+        $$('#volverBugButton').on('click', function(event){
+            mainView.router.back();
         });
     });
 

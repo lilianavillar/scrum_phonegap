@@ -55,7 +55,7 @@ public class BugsListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bugs_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.usuarioBugsToolbar);
         setSupportActionBar(toolbar);
         this.listView = (ListView) findViewById(R.id.bugsList);
         this.coordinator = (CoordinatorLayout) findViewById(R.id.coordinatorBugsList);
@@ -74,8 +74,13 @@ public class BugsListActivity extends AppCompatActivity {
             String[] valores = intent.getExtras().getStringArrayList("items").get(0).toString().split("@");
             this.sprintName = valores[0];
             this.sprintPasswd = valores[1];
+            //Se cambia el titulo de la activity
+            Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.usuarioBugsToolbar);
+            setSupportActionBar(mActionBarToolbar);
+            getSupportActionBar().setTitle(this.sprintName);
         }
         crearBugsList();
+        setResult(RESULT_OK, intent);
 
     }
 

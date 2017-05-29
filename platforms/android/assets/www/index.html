@@ -17,8 +17,8 @@
     <!--Este es el menú-->
     <div class="panel panel-left panel-cover">
         <p id="masterMenu">Opciones SCRUM Master</p>
-        <p><a href="#bugs" class="close-panel" id="pilaMenu">Pila de producto</a></p>
-        <p><a href="#contactos" class="close-panel" id="equipoMenu">Miembros equipo</a></p>
+        <p><a href="#" class="close-panel" id="pilaMenu">Pila de producto</a></p>
+        <p><a href="#" class="close-panel" id="equipoMenu">Miembros equipo</a></p>
         <p><a href="#passwd" class="close-panel" id="passwdMenu">Contraseña</a></p>
     </div>
     <!--Creamos el contenedor de vistas-->
@@ -33,7 +33,7 @@
                         <div class="navbar-inner">
                             <div class="center">ScrumApp</div>
                             <div class="right" id="menuIcon">
-                                <a href="#" class="open-panel link icon-only right">
+                                <a href="#" class="open-panel link icon-only left">
                                     <i class="icon icon-bars"></i>
                                 </a>
                             </div>
@@ -96,12 +96,12 @@
                 <div class="page cached" data-page="bugs">
                     <div class="navbar">
                         <div class="navbar-inner">
-                            <div class="center">Pila de producto</div>
-                            <div class="right">
-                                <a href="#" class="open-panel link icon-only right">
+                            <div class="left">
+                                <a href="#" class="open-panel link icon-only left">
                                     <i class="icon icon-bars"></i>
                                 </a>
                             </div>
+                            <div class="center">Pila de producto</div>
                         </div>
                     </div>
                     <!-- Butón flotante para añadir nuevos bugs e iniciar un nuevo sprint -->
@@ -129,12 +129,13 @@
                 <div class="page cached" data-page="contactos">
                     <div class="navbar">
                         <div class="navbar-inner">
-                            <div class="center">Miembros del equipo</div>
-                            <div class="right">
-                                <a href="#" class="open-panel link icon-only right">
+                            <div class="left">
+                                <a href="#" class="open-panel link icon-only left">
                                     <i class="icon icon-bars"></i>
                                 </a>
                             </div>
+                            <div class="center">Miembros del equipo</div>
+
                         </div>
                     </div>
                     <a id="irNuevoContactoButton" href="#" class="floating-button color-pink">
@@ -150,12 +151,12 @@
                 <div class="page cached" data-page="nuevoContacto">
                     <div class="navbar">
                         <div class="navbar-inner">
-                            <div class="center">Nuevo contacto</div>
-                            <div class="right">
-                                <a href="#" class="open-panel link icon-only right">
+                            <div class="left">
+                                <a href="#" class="open-panel link icon-only left">
                                     <i class="icon icon-bars"></i>
                                 </a>
                             </div>
+                            <div class="center">Nuevo contacto</div>
                         </div>
                     </div>
                     <div class="page-content">
@@ -224,12 +225,12 @@
                 <div class="page cached" data-page="editarContacto">
                     <div class="navbar">
                         <div class="navbar-inner">
-                            <div class="center">Editar contacto</div>
-                            <div class="right">
-                                <a href="#" class="open-panel link icon-only right">
+                            <div class="left">
+                                <a href="#" class="open-panel link icon-only left">
                                     <i class="icon icon-bars"></i>
                                 </a>
                             </div>
+                            <div class="center">Editar contacto</div>
                         </div>
                     </div>
                     <div class="page-content">
@@ -297,12 +298,12 @@
                 <div class="page cached" data-page="nuevoBug">
                     <div class="navbar">
                         <div class="navbar-inner">
-                            <div class="center">Nuevo bug</div>
-                            <div class="right">
-                                <a href="#" class="open-panel link icon-only right">
+                            <div class="left">
+                                <a href="#" class="open-panel link icon-only left">
                                     <i class="icon icon-bars"></i>
                                 </a>
                             </div>
+                            <div class="center">Nuevo bug</div>
                         </div>
                     </div>
                     <div class="page-content">
@@ -361,7 +362,7 @@
                             </ul>
                         </form>
                         <p class="buttons-row">
-                            <a id="cancelarBugButton" href="#bugs" class="button button-raised">Cancelar</a>
+                            <a id="cancelarBugButton" href="#" class="button button-raised">Cancelar</a>
                             <a id="nuevoBugButton" href="#" class="button button-fill button-raised">Aceptar</a>
                         </p>
                     </div>
@@ -372,12 +373,12 @@
                 <div class="page cached" data-page="editarBug">
                     <div class="navbar">
                         <div class="navbar-inner">
-                            <div class="center">Editar bug</div>
-                            <div class="right">
-                                <a href="#" class="open-panel link icon-only right">
+                            <div class="left">
+                                <a href="#" class="open-panel link icon-only left">
                                     <i class="icon icon-bars"></i>
                                 </a>
                             </div>
+                            <div class="center">Editar bug</div>
                         </div>
                     </div>
                     <div class="page-content">
@@ -445,12 +446,12 @@
                 <div class="page cached" data-page="verBug">
                     <div class="navbar">
                         <div class="navbar-inner">
-                            <div class="center">Bug</div>
-                            <div class="right">
-                                <a href="#" class="open-panel link icon-only right">
+                            <div class="left">
+                                <a href="#" class="open-panel link icon-only left">
                                     <i class="icon icon-bars"></i>
                                 </a>
                             </div>
+                            <div class="center">Bug</div>
                         </div>
                     </div>
                     <div class="page-content">
@@ -509,7 +510,7 @@
                             </ul>
                         </form>
                         <p class="buttons-row">
-                            <a id="volverBugButton" href="#bugs" class="button button-raised">Volver</a>
+                            <a id="volverBugButton" href="#" class="button button-raised">Volver</a>
                         </p>
                     </div>
                 </div>
@@ -519,12 +520,12 @@
                 <div class="page cached" data-page="passwd">
                     <div class="navbar">
                         <div class="navbar-inner">
-                            <div class="center">Contraseña del sprint</div>
-                            <div class="right">
-                                <a href="#" class="open-panel link icon-only right">
+                            <div class="left">
+                                <a href="#" class="open-panel link icon-only left">
                                     <i class="icon icon-bars"></i>
                                 </a>
                             </div>
+                            <div class="center">Contraseña del sprint</div>
                         </div>
                     </div>
                     <div class="page-content">

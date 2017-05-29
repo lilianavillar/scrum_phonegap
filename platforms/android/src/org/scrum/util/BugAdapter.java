@@ -95,7 +95,7 @@ public class BugAdapter extends BaseAdapter{
     private Bitmap createQR(String text) {
         QRCodeWriter writer = new QRCodeWriter();
         try {
-            BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, 512, 512);
+            BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, 128, 128);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
@@ -149,11 +149,10 @@ public class BugAdapter extends BaseAdapter{
 
     private void makeSureFileWasCreatedThenMakeAvabile(File file){
         MediaScannerConnection.scanFile(context,
-                new String[] { file.toString() } , null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-
-                    public void onScanCompleted(String path, Uri uri) {
-                    }
-                });
+            new String[] { file.toString() } , null,
+            new MediaScannerConnection.OnScanCompletedListener() {
+                public void onScanCompleted(String path, Uri uri) {
+                }
+            });
     }
 }
