@@ -12,24 +12,19 @@
         domCache: true //Activamos el DOM cache, para pages inline
     });
 
+    myApp.onPageBack("index", function(){
+        document.getElementById("emailInicio").value = "";
+        document.getElementById("sprintInicio").value = "";
+        document.getElementById("passwdInicio").value = "";
+    });
+
     myApp.onPageInit("index", function(){
         $('#menuIcon').hide();
         $$('#pilaMenu').on('click', function(event){
             mainView.router.loadPage({pageName: 'bugs'});
-            /*for (var i = 0; i < mainView.history.length; i++) {
-              if (mainView.history[i] === '#contactos') mainView.history.splice(i,1);
-            }
-            //So when you are on login page, details page sit on left:
-            $$('.view-main .page-on-left, .view-main .navbar-on-left').remove();*/
         });
         $$('#equipoMenu').on('click', function(event){
             mainView.router.loadPage({pageName: 'contactos'});
-            /*
-            for (var i = 0; i < mainView.history.length; i++) {
-              if (mainView.history[i] === '#bugs') mainView.history.splice(i,1);
-            }
-            //So when you are on login page, details page sit on left:
-            $$('.view-main .page-on-left, .view-main .navbar-on-left').remove();*/
         });
         $$('#masterButton').on('click', function(event){
             mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
@@ -39,7 +34,7 @@
             event.preventDefault();
             var email = document.getElementById("emailInicio").value;
             var nombre = document.getElementById("sprintInicio").value;
-            var paswd = document.getElementById("passwdInicio").value;
+            var passwd = document.getElementById("passwdInicio").value;
             if(!email || !nombre || !passwd){
                 alert("Debe rellenar todos los datos");
             } else {
@@ -59,7 +54,6 @@
                     else{
                         //El email corporativo que ha iniciado sesión, debemos pasarlo a android
                         //para poder asignarle los bugs cuando los escane
-
                         HybridBridge.addItem(nombre + "@" + passwd, "org.scrum.BugsListActivity", function(){console.log("Hybrid Bridge Success")},function(e){console.log("Hybrid Bridge Error" + e)});
                     }
                 },
@@ -86,8 +80,19 @@
                 transaction.executeSql('SELECT COUNT(*) AS c FROM bug', [],
                     function (tx, results) {
                         if(results.rows.item(0).c > 0){
-                        mainView.history.splice(1, 1);
-                            HybridBridge.addItem(null, "org.scrum.BugsMasterListActivity", function(){console.log("Hybrid Bridge Success")},function(e){console.log("Hybrid Bridge Error" + e)});
+                             myApp.prompt('Indique la contraseña para este Sprint', 'Contraseña', function (value) {
+                                if(value != null && value != "" ){
+                                    HybridBridge.addItem(value, "org.scrum.BugsMasterListActivity",
+                                    function(){
+                                        console.log("Hybrid Bridge Success")
+                                    },
+                                    function(e){
+                                        console.log("Hybrid Bridge Error" + e)
+                                    });
+                                } else {
+                                    alert("Debe seleccionar una contraseña");
+                                }
+                            });
                         } else {
                             myApp.addNotification({ message: 'No existen bugs en la lista de producto. Por favor, incluya primero tareas en la pila de producto', hold: 2000});
                         }
@@ -102,39 +107,7 @@
         cargarBugs();
     });
 
-    $$(document).on('page:init', function (e) {
-        var page = e.detail.page;
 
-    });
-
-    $$(document).on('page:beforeInit', function (e) {
-            var page = e.detail.page;
-
-        });
-
-        $$(document).on('page:reinit', function (e) {
-                var page = e.detail.page;
-
-            });
-
-            $$(document).on('page:beforeAnimation', function (e) {
-                    var page = e.detail.page;
-
-                });
-
-                $$(document).on('page:back', function (e) {
-                                    var page = e.detail.page;
-
-                                });
-
-                                $$(document).on('page:afterAnimation', function (e) {
-                                                    var page = e.detail.page;
-
-                                                });
-    $$(document).on('page:afterBack', function (e) {
-                        var page = e.detail.page;
-
-                    });
 
     var app = {
         initialize: function() {
@@ -146,6 +119,7 @@
             var prueba = mainView;
         },*/
         init: function() {
+            $('#menuIcon').hide();
             myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db", location: 'default'});
             myDB.transaction(function(transaction) {
                 transaction.executeSql('CREATE TABLE IF NOT EXISTS contacto (id integer primary key, nombre text, apellidos text, email text, horas integer)', [],
@@ -160,25 +134,6 @@
                 },
                 function(error) {
                 });
-            });
-            myDB.transaction(function(transaction) {
-                transaction.executeSql('CREATE TABLE IF NOT EXISTS passwd (passwd text)', [],
-                function(tx, result) {
-                },
-                function(error) {
-                });
-            });
-            myDB.transaction(function(transaction) {
-                transaction.executeSql('SELECT * FROM passwd', [],
-                    function (tx, results) {
-                        //Se obtienen los valores del contacto a actualizar
-                        passwdActual = results.rows.item(0).passwd;
-                        //Se muestran en el formulario de editar contacto
-                        document.getElementById("passwd").value = passwdActual;
-                    },
-                    function(error){
-                        myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
-                    });
             });
             cargarBugs();
         },
@@ -453,7 +408,6 @@
                     myApp.addNotification({ message: 'Nuevo bug añadido con éxito', hold: 2000});
                     mainView.router.back();
                     //mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
-                    //mainView.destroy();
                 },
                 function(error){
                     console.log(error);
@@ -499,64 +453,3 @@
             mainView.router.back();
         });
     });
-
-    myApp.onPageBeforeAnimation("passwd", function(){
-        var passwdActual;
-            myDB.transaction(function(transaction) {
-            transaction.executeSql('SELECT * FROM passwd', [],
-                function (tx, results) {
-                    //Se obtienen los valores del contacto a actualizar
-                    passwdActual = results.rows.item(0).passwd;
-                    //Se muestran en el formulario de editar contacto
-                    document.getElementById("passwd").value = passwdActual;
-                },
-                function(error){
-                    myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
-                });
-            });
-    });
-
-    myApp.onPageInit("passwd", function(){
-        $$('#nuevaPasswdButton').on('click', function(event){
-            event.preventDefault();
-            var passwd = $("#passwd").val();
-
-            myDB.transaction(function(transaction) {
-                transaction.executeSql('SELECT * FROM passwd', [],
-                    function (tx, results) {
-                        var len = results.rows.length;
-                        if(len == 0){
-                            myDB.transaction(function(transaction) {
-                                var executeQuery = "INSERT INTO passwd (passwd) VALUES (?)";
-                                transaction.executeSql(executeQuery, [passwd],
-                                function(tx, result) {
-                                    myApp.addNotification({ message: 'Nueva contraseña añadida con éxito', hold: 2000});
-                                    mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
-                                },
-                                function(error){
-                                    myApp.addNotification({ message: 'Ha ocurrido un error al añadir la contraseña', hold: 2000});
-                                    });
-                            });
-                        }
-                        else{
-                            myDB.transaction(function(transaction) {
-                                var executeQuery = "UPDATE passwd SET passwd=?";
-                                transaction.executeSql(executeQuery, [passwd],
-                                function(tx, result) {
-                                    myApp.addNotification({ message: 'Contraseña modificada con éxito', hold: 2000});
-                                    mainView.router.loadPage({pageName: 'bugs', ignoreCache: true, force: true});
-                                },
-                                function(error){
-                                    myApp.addNotification({ message: 'Ha ocurrido un error al modificar la contraseña', hold: 2000});
-                                    });
-                            });
-                        }
-                    },
-                    function(error){
-                        myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
-                    }
-                );
-            });
-        });
-    });
-

@@ -1,25 +1,22 @@
 package org.scrum;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
-import com.google.zxing.common.StringUtils;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.HttpGet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.apache.cordova.CordovaActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,25 +33,21 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
-public class BugsMasterListActivity extends AppCompatActivity {
+public class BugsMasterListActivity extends CordovaActivity{
     
     private List<Bug> bugsList;
     private ListView listView;
     private CoordinatorLayout coordinator;
+    private String contrasenia;
 
     @Override
-    public void onBackPressed() {
-        Intent main = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(main);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bugs_master_list);
         Intent intent = this.getIntent();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.masterBugsToolbar);
-        setSupportActionBar(toolbar);
+        if (intent.hasExtra("items")){
+            this.contrasenia = intent.getExtras().getStringArrayList("items").get(0).toString();
+        }
         this.listView = (ListView) findViewById(R.id.masterBugsList);
         this.coordinator = (CoordinatorLayout) findViewById(R.id.coordinatorBugsMasterList);
         try {
@@ -67,6 +60,9 @@ public class BugsMasterListActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
 
     }
+
+    @Override
+    public void onBackPressed() { loadUrl(launchUrl); }
 
     private void crearBugsList() throws JSONException, UnsupportedEncodingException {
 
@@ -84,14 +80,7 @@ public class BugsMasterListActivity extends AppCompatActivity {
         listView.setAdapter(new BugAdapter(getApplicationContext(), bugsList));
         AsyncHttpClient client = new AsyncHttpClient();
 
-        String contrasenia = "";
-        Cursor cp = db.rawQuery("SELECT * FROM passwd", null);
-        if (cp.moveToFirst()) {
-            do {
-                contrasenia = cp.getString(0);
-            } while(cp.moveToNext());
-        }
-
+        //Creamos el objeto SPRINT
         SimpleDateFormat timeStampFormat = new SimpleDateFormat("MMddHHmm");
         Date myDate = new Date();
         String hoy = timeStampFormat.format(myDate);
@@ -103,8 +92,9 @@ public class BugsMasterListActivity extends AppCompatActivity {
 
         //Se cambia el titulo de la activity
         Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.masterBugsToolbar);
-        setSupportActionBar(mActionBarToolbar);
-        getSupportActionBar().setTitle("Sprint" + hoy);
+        mActionBarToolbar.setTitle("Sprint" + hoy);
+        //setSupportActionBar(mActionBarToolbar);
+        //getSupportActionBar().setTitle("Sprint" + hoy);
 
 
         StringEntity entity = new StringEntity(jsonObj.toString());

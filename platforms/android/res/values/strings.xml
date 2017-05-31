@@ -5,4 +5,7 @@
     <string name="activity_name">@string/launcher_name</string>
     <string name="title_activity_bugs_list">BugsListActivity</string>
     <string name="title_activity_bugs_master_list">BugsMasterListActivity</string>
+    <string name="contrasenia">Contraseña</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancel">Cancelar</string>
 </resources>
