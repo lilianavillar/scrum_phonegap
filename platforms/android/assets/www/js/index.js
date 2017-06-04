@@ -12,10 +12,13 @@
         domCache: true //Activamos el DOM cache, para pages inline
     });
 
-    myApp.onPageBack("index", function(){
-        document.getElementById("emailInicio").value = "";
-        document.getElementById("sprintInicio").value = "";
-        document.getElementById("passwdInicio").value = "";
+    var ptrContent = $$('.pull-to-refresh-content');
+    ptrContent.on('ptr:refresh', function (e) {
+        setTimeout(function () {
+            cargarBugs();
+            myApp.pullToRefreshDone();
+        }, 1500);
+
     });
 
     myApp.onPageInit("index", function(){
@@ -39,32 +42,35 @@
                 alert("Debe rellenar todos los datos");
             } else {
             var dataForm = $('#inicioForm').serialize();
-            $.ajax({
-                url: 'https://appscrum.herokuapp.com/login',
-                type: 'POST',
-                dataType: 'json',
-                data: dataForm,
-                success: function(data){
-                    console.log(data);
-                    if(data == null){
+                $.ajax({
+                    url: 'https://appscrum.herokuapp.com/login',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: dataForm,
+                    success: function(data){
+                        console.log(data);
+                        if(data == null){
+                            myApp.addNotification({
+                            message: 'Los datos no corresponden a ningún sprint',
+                            hold: 4000});
+                        }
+                        else{
+                            //El email corporativo que ha iniciado sesión, debemos pasarlo a android
+                            //para poder asignarle los bugs cuando los escane
+                            HybridBridge.addItem(nombre + "@" + passwd, "org.scrum.BugsListActivity",
+                            function(){console.log("Hybrid Bridge Success")},
+                            function(e){console.log("Hybrid Bridge Error" + e)});
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        console.log("ERROR");
+                        console.log(jqXHR.status + "\n" + textStatus + "\n" + errorThrown);
                         myApp.addNotification({
-                        message: 'Los datos no corresponden a ningún sprint',
-                        hold: 4000});
+                            message: 'Ha ocurrido un problema verificando los datos de acceso.',
+                            hold: 4000
+                        })
                     }
-                    else{
-                        //El email corporativo que ha iniciado sesión, debemos pasarlo a android
-                        //para poder asignarle los bugs cuando los escane
-                        HybridBridge.addItem(nombre + "@" + passwd, "org.scrum.BugsListActivity", function(){console.log("Hybrid Bridge Success")},function(e){console.log("Hybrid Bridge Error" + e)});
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown){
-                    console.log("ERROR");
-                    console.log(jqXHR.status + "\n" + textStatus + "\n" + errorThrown);
-                    myApp.addNotification({
-                        message: 'Ha ocurrido un problema verificando los datos de acceso.',
-                        hold: 4000})
-                }
-            });
+                });
             }
         });
     });
@@ -77,29 +83,41 @@
         });
         $$('#iniciarSprintButton').on('click', function(event){
             myDB.readTransaction(function(transaction) {
-                transaction.executeSql('SELECT COUNT(*) AS c FROM bug', [],
-                    function (tx, results) {
-                        if(results.rows.item(0).c > 0){
-                             myApp.prompt('Indique la contraseña para este Sprint', 'Contraseña', function (value) {
-                                if(value != null && value != "" ){
-                                    HybridBridge.addItem(value, "org.scrum.BugsMasterListActivity",
-                                    function(){
-                                        console.log("Hybrid Bridge Success")
-                                    },
-                                    function(e){
-                                        console.log("Hybrid Bridge Error" + e)
-                                    });
-                                } else {
-                                    alert("Debe seleccionar una contraseña");
-                                }
-                            });
-                        } else {
-                            myApp.addNotification({ message: 'No existen bugs en la lista de producto. Por favor, incluya primero tareas en la pila de producto', hold: 2000});
-                        }
-                    },
-                    function(error){
-                        myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
-                    });
+                transaction.executeSql('SELECT COUNT(*) AS b FROM bug', [],
+                function (tx, results) {
+                    if(results.rows.item(0).b > 0){
+                         myDB.readTransaction(function(transaction) {
+                         transaction.executeSql('SELECT COUNT(*) AS c FROM contacto', [],
+                             function (tx, results) {
+                                 if(results.rows.item(0).c > 0){
+                                      myApp.prompt('Indique la contraseña para este Sprint', 'Contraseña', function (value) {
+                                         if(value != null && value != "" ){
+                                             HybridBridge.addItem(value, "org.scrum.BugsMasterListActivity",
+                                             function(){
+                                                 console.log("Hybrid Bridge Success")
+                                             },
+                                             function(e){
+                                                 console.log("Hybrid Bridge Error" + e)
+                                             });
+                                         } else {
+                                             alert("Debe seleccionar una contraseña");
+                                         }
+                                     });
+                                 } else {
+                                     myApp.addNotification({ message: 'No existen miembros en el equipo. Por favor, incluya primero algún miembro.', hold: 2000});
+                                 }
+                             },
+                             function(error){
+                                 myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
+                             });
+                         });
+                    } else {
+                        myApp.addNotification({ message: 'No existen bugs en la lista de producto. Por favor, incluya primero tareas en la pila de producto', hold: 2000});
+                    }
+                },
+                function(error){
+                    myApp.addNotification({ message: 'Ha ocurrido un error al conectarse con la base de datos', hold: 2000});
+                });
             });
         });
     });
@@ -107,17 +125,10 @@
         cargarBugs();
     });
 
-
-
     var app = {
         initialize: function() {
             document.addEventListener("deviceready", this.init, false);
-            //document.addEventListener("backbutton", this.onBackKeyDown, false);
-
         },
-        /*onBackKeyDown : function(){
-            var prueba = mainView;
-        },*/
         init: function() {
             $('#menuIcon').hide();
             myDB = window.sqlitePlugin.openDatabase({name: "mySQLite.db", location: 'default'});

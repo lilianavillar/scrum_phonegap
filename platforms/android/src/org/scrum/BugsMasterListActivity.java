@@ -62,14 +62,21 @@ public class BugsMasterListActivity extends CordovaActivity{
     }
 
     @Override
-    public void onBackPressed() { loadUrl(launchUrl); }
+    public void onBackPressed() {
+        loadUrl("javascript:cargarBugs()");
+        cerrar();
+    }
 
+    private void cerrar(){
+        this.finish();
+    }
+// loadUrl(launchUrl); super.onBackPressed();
     private void crearBugsList() throws JSONException, UnsupportedEncodingException {
 
         bugsList = new ArrayList<Bug>();
 
         final SQLiteDatabase db =  openOrCreateDatabase("mySQLite.db", MODE_PRIVATE, null);
-        int numero = (int) (Math.random() *20) + 1;
+        int numero = (int) (Math.random() *5) + 1;
         Cursor c = db.rawQuery("SELECT * FROM bug ORDER BY prioridad ASC LIMIT " + numero, null);
         JSONArray allBugs = cur2Json(c);
         //Aquí habría que hacer el procesamiento para elegir los bugs
