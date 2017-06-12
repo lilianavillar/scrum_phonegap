@@ -69,33 +69,36 @@ public class BugAdapter extends BaseAdapter{
             rowView = inflater.inflate(R.layout.master_list_item, parent, false);
         }
         TextView titulo = (TextView) rowView.findViewById(R.id.itemTitulo);
-        TextView descripcion = (TextView) rowView.findViewById(R.id.itemDescripcion);
-        TextView estado = (TextView) rowView.findViewById(R.id.itemEstado);
         TextView prioridad = (TextView) rowView.findViewById(R.id.itemPrioridad);
-        TextView estimacion = (TextView) rowView.findViewById(R.id.itemEstimacion);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.imageBug);
 
         Bug bug = this.bugs.get(position);
         titulo.setText("Título: " + bug.getTitulo().toString());
-        descripcion.setText("Descripcion: " + bug.getDescripcion().toString());
-        estado.setText("Estado: " + bug.getEstado().toString());
         prioridad.setText("Prioridad: " + bug.getPrioridad());
-        estimacion.setText("Estimación: " + bug.getEstimacion());
 
         Gson gson = new Gson();
         String json = gson.toJson(bug);
 
-        Bitmap imagen = createQR(json.toString());
+        Bitmap imagen = createQR(createTextoQR(bug));
         saveImage(imagen,  bug.getTitulo().toString());
         imageView.setImageBitmap(imagen);
 
         return rowView;
     }
 
+    private String createTextoQR(Bug bug){
+        return "Título: " + bug.getTitulo().toString() + "\n" +
+        "Descripcion: " + bug.getDescripcion().toString() + "\n" +
+        "Estado: " + bug.getEstado().toString()+ "\n" +
+        "Prioridad: " + bug.getPrioridad() + "\n" +
+        "Estimación: " + bug.getEstimacion();
+
+    }
+
     private Bitmap createQR(String text) {
         QRCodeWriter writer = new QRCodeWriter();
         try {
-            BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, 128, 128);
+            BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, 256, 256);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
@@ -114,16 +117,13 @@ public class BugAdapter extends BaseAdapter{
     public void saveImage(Bitmap ImageToSave, String titulo) {
         String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/bugs";
         File dir = new File(file_path);
-
         if (!dir.exists()) {
             dir.mkdirs();
         }
-
         File file = new File(dir, titulo + ".jpg");
 
         try {
             FileOutputStream fOut = new FileOutputStream(file);
-
             ImageToSave.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
             fOut.flush();
             fOut.close();

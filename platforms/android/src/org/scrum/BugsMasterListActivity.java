@@ -61,16 +61,6 @@ public class BugsMasterListActivity extends CordovaActivity{
 
     }
 
-    @Override
-    public void onBackPressed() {
-        loadUrl("javascript:cargarBugs()");
-        cerrar();
-    }
-
-    private void cerrar(){
-        this.finish();
-    }
-// loadUrl(launchUrl); super.onBackPressed();
     private void crearBugsList() throws JSONException, UnsupportedEncodingException {
 
         bugsList = new ArrayList<Bug>();

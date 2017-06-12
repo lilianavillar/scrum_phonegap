@@ -20,7 +20,9 @@
         }, 1500);
 
     });
-
+    myApp.onPageBeforeAnimation("index", function(){
+        $('#menuIcon').hide();
+    });
     myApp.onPageInit("index", function(){
         $('#menuIcon').hide();
         $$('#pilaMenu').on('click', function(event){
@@ -57,6 +59,7 @@
                         else{
                             //El email corporativo que ha iniciado sesión, debemos pasarlo a android
                             //para poder asignarle los bugs cuando los escane
+                            document.getElementById("inicioForm").reset();
                             HybridBridge.addItem(nombre + "@" + passwd, "org.scrum.BugsListActivity",
                             function(){console.log("Hybrid Bridge Success")},
                             function(e){console.log("Hybrid Bridge Error" + e)});
